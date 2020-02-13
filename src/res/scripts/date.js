@@ -9,7 +9,7 @@ export function date(string) {
     now === time.getDate()
       ? 'today at'
       : now - 1 === time.getDate()
-      ? 'yearsturday at'
+      ? 'yesterday at'
       : monthAndDay
   } ${time.getHours()}:${time.getMinutes()}`;
 }

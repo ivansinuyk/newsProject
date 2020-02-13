@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Container, Content, Body, Card, CardItem, Left} from 'native-base';
 import {Image, StyleSheet, Text} from 'react-native';
 import Header from '../../components/Header';
-import {w, h, AUTHOR_NEWS} from '../../res/constants';
+import {w, h, AUTHOR_NEWS, NEWS_DETAILS} from '../../res/constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import {savedItem, readedItem} from '../../actions/actions';
@@ -58,7 +58,7 @@ class Details extends Component {
             <CardItem style={{backgroundColor: this.props.backgroundColor}}>
               <Left>
                 <Body>
-                  <TextStyle font={this.props.font - 2}>{show.author}</TextStyle>
+                  <TextStyle font={this.props.font - 2}>Author: {!show.author ? 'Unknown' : show.author}</TextStyle>
                 </Body>
                 <Body>
                   <TextStyle font={this.props.font - 2}>

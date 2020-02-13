@@ -10,6 +10,7 @@ import {
   changeFontSize,
 } from '../../actions/actions';
 import TextStyle from '../../components/TextStyle';
+import {w} from '../../res/constants';
 
 class Setting extends Component {
   state = {
@@ -57,7 +58,7 @@ class Setting extends Component {
                 marginHorizontal: 20,
               }}>
               <Slider
-                style={{width: 200, height: 40}}
+                style={{width: w-w/4, height: 40}}
                 value={this.props.fontSize}
                 minimumValue={12}
                 maximumValue={20}
@@ -72,7 +73,7 @@ class Setting extends Component {
                   color: this.props.textColor,
                   fontSize: this.state.font,
                 }}>
-                Some text
+                Check
               </Text>
             </View>
           </View>
@@ -81,15 +82,14 @@ class Setting extends Component {
             <TouchableOpacity
               onPress={() => this.props.deleteAll()}
               style={{
-                backgroundColor: this.props.deleteSaved.length
-                  ? 'blue'
-                  : 'white',
+                  width: w/2,
+                  borderColor: 'gray',
                 borderWidth: 1,
                 margin: 20,
                 borderRadius: 15,
               }}>
               <TextStyle>
-                Delete all saved news{' '}
+                Tab here to delete{' '}
                 {this.props.deleteSaved.length
                   ? this.props.deleteSaved.length
                   : 'Empty'}
