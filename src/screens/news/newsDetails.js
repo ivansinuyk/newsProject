@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import {savedItem, readedItem} from '../../actions/actions';
 import TextStyle from '../../components/TextStyle';
-import { date } from '../../res/scripts/date';
+import {date} from '../../res/scripts/date';
 
 class Details extends Component {
   readItem() {
@@ -58,7 +58,9 @@ class Details extends Component {
             <CardItem style={{backgroundColor: this.props.backgroundColor}}>
               <Left>
                 <Body>
-                  <TextStyle font={this.props.font - 2}>Author: {!show.author ? 'Unknown' : show.author}</TextStyle>
+                  <TextStyle font={this.props.font - 2}>
+                    Author: {!show.author ? 'Unknown' : show.author}
+                  </TextStyle>
                 </Body>
                 <Body>
                   <TextStyle font={this.props.font - 2}>

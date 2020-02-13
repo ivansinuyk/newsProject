@@ -5,14 +5,16 @@ import {
   SafeAreaView,
   View,
   TouchableOpacity,
-    StatusBar
+  StatusBar,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {w} from '../res/constants';
 
 const Header = ({title, onPress, icon, color, details, back}) => (
   <SafeAreaView style={styles.safe}>
-<StatusBar barStyle={color === 'white' ? 'light-content' : 'dark-content'}/>
+    <StatusBar
+      barStyle={color === 'white' ? 'light-content' : 'dark-content'}
+    />
     {icon && (
       <TouchableOpacity
         style={styles.icon}
@@ -20,7 +22,12 @@ const Header = ({title, onPress, icon, color, details, back}) => (
         <Icon color={color} name={icon} size={50} />
       </TouchableOpacity>
     )}
-    <View style={[styles.title, {width: icon ? w-w/6 : w}, !icon && {alignItems: 'center'}]}>
+    <View
+      style={[
+        styles.title,
+        {width: icon ? w - w / 6 : w},
+        !icon && {alignItems: 'center'},
+      ]}>
       <Text
         style={[styles.text, {color: color}]}
         numberOfLines={1}

@@ -4,7 +4,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  View
+  View,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getData} from '../../actions/actions';

@@ -3,7 +3,7 @@ import {TouchableOpacity, Image} from 'react-native';
 import {Body, Card, CardItem, Right, Left} from 'native-base';
 import TextStyle from './TextStyle';
 import {w} from '../res/constants/';
-import { date } from '../res/scripts/date';
+import {date} from '../res/scripts/date';
 
 const News = props => {
   return (
@@ -14,7 +14,9 @@ const News = props => {
           bordered
           style={{backgroundColor: props.backgroundColor}}>
           <Body style={{alignItems: 'center'}}>
-            <TextStyle font={props.font + 2}>{props.item.source.name}</TextStyle>
+            <TextStyle font={props.font + 2}>
+              {props.item.source.name}
+            </TextStyle>
           </Body>
         </CardItem>
         <CardItem bordered style={{backgroundColor: props.backgroundColor}}>
@@ -36,10 +38,14 @@ const News = props => {
           footer
           bordered
           style={{backgroundColor: props.backgroundColor}}>
-          <TextStyle font={props.font - 2}>{date(props.item.publishedAt)}</TextStyle>
+          <TextStyle font={props.font - 2}>
+            {date(props.item.publishedAt)}
+          </TextStyle>
           {props.item.isReaded && (
             <Right>
-              <TextStyle opacity font={props.font - 2}>Readed</TextStyle>
+              <TextStyle opacity font={props.font - 2}>
+                Readed
+              </TextStyle>
             </Right>
           )}
         </CardItem>

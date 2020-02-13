@@ -58,7 +58,7 @@ class Setting extends Component {
                 marginHorizontal: 20,
               }}>
               <Slider
-                style={{width: w-w/4, height: 40}}
+                style={{width: w - w / 4, height: 40}}
                 value={this.props.fontSize}
                 minimumValue={12}
                 maximumValue={20}
@@ -78,12 +78,12 @@ class Setting extends Component {
             </View>
           </View>
           <View style={items}>
-              <TextStyle>Saved news</TextStyle>
+            <TextStyle>Saved news</TextStyle>
             <TouchableOpacity
               onPress={() => this.props.deleteAll()}
               style={{
-                  width: w/2,
-                  borderColor: 'gray',
+                width: w / 2,
+                borderColor: 'gray',
                 borderWidth: 1,
                 margin: 20,
                 borderRadius: 15,
