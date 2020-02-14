@@ -24,6 +24,7 @@ class AuthorNews extends Component {
                 <News
                   color={this.props.textColor}
                   backgroundColor={this.props.backgroundColor}
+                  font={this.props.font}
                   item={el}
                   key={index}
                   toDetails={() =>
@@ -46,6 +47,7 @@ const mapStateToProps = state => ({
   data: state.newsReducers.data,
   textColor: state.styleReducers.color,
   backgroundColor: state.styleReducers.backgroundColor,
+  font: state.styleReducers.fontSize,
 });
 
 export default connect(mapStateToProps)(AuthorNews);
