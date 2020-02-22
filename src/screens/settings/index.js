@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, Switch, Text, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import Header from '../../components/Header';
-import Slider from '@react-native-community/slider';
 import {connect} from 'react-redux';
 import {
   deleteAllSavedNews,
@@ -9,124 +8,55 @@ import {
   changeToNight,
   changeFontSize,
 } from '../../actions/actions';
-import TextStyle from '../../components/TextStyle';
-import {w} from '../../res/constants';
+import ThemeSettings from '../../components/ThemeSettings';
+import FontSettings from '../../components/FontSettings';
+import DeleteSettings from '../../components/DeleteSaved';
 
 class Setting extends Component {
   state = {
     font: this.props.fontSize,
   };
   render() {
-    const {items} = styles;
+    const {
+      backgroundColor,
+      textColor,
+      sw,
+      fontSize,
+      saved,
+      dispatch,
+    } = this.props;
     return (
-      <View style={{flex: 1, backgroundColor: this.props.backgroundColor}}>
-        <Header
-          onPress={this.props.navigation.toggleDrawer}
-          title={'Settings'}
-          color={this.props.textColor}
-          details={true}
-        />
+      <View style={{flex: 1, backgroundColor: backgroundColor}}>
+        <Header title={'Settings'} color={textColor} details={true} />
         <View>
-          <View style={items}>
-            <TextStyle>Change theme</TextStyle>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginHorizontal: 20,
-              }}>
-              <Switch
-                style={{width: '10%'}}
-                onValueChange={() =>
-                  !this.props.switch
-                    ? this.props.changeToNight()
-                    : this.props.changeToDay()
-                }
-                value={this.props.switch}
-              />
-              <TextStyle>
-                Current theme: {!this.props.switch ? 'day' : 'night'}
-              </TextStyle>
-            </View>
-          </View>
-          <View style={items}>
-            <TextStyle>Change font size of news</TextStyle>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginHorizontal: 20,
-              }}>
-              <Slider
-                style={{width: w - w / 4, height: 40}}
-                value={this.props.fontSize}
-                minimumValue={12}
-                maximumValue={20}
-                step={2}
-                onValueChange={val => this.setState({font: val})}
-                onSlidingComplete={value => this.props.changeFontSize(value)}
-                minimumTrackTintColor="red"
-                maximumTrackTintColor="green"
-              />
-              <Text
-                style={{
-                  color: this.props.textColor,
-                  fontSize: this.state.font,
-                }}>
-                Check
-              </Text>
-            </View>
-          </View>
-          <View style={items}>
-            <TextStyle>Saved news</TextStyle>
-            <TouchableOpacity
-              onPress={() => this.props.deleteAll()}
-              style={{
-                width: w / 2,
-                borderColor: 'gray',
-                borderWidth: 1,
-                margin: 20,
-                borderRadius: 15,
-              }}>
-              <TextStyle>
-                Tab here to delete{' '}
-                {this.props.deleteSaved.length
-                  ? this.props.deleteSaved.length
-                  : 'Empty'}
-              </TextStyle>
-            </TouchableOpacity>
-          </View>
+          <ThemeSettings
+            sw={sw}
+            toNight={() => dispatch(changeToNight())}
+            toDay={() => dispatch(changeToDay())}
+          />
+          <FontSettings
+            textColor={textColor}
+            fontSize={fontSize}
+            onValueChange={val => this.setState({font: val})}
+            onSlidingComplete={value => dispatch(changeFontSize(value))}
+            font={this.state.font}
+          />
+          <DeleteSettings
+            onPress={() => dispatch(deleteAllSavedNews())}
+            saved={saved}
+          />
         </View>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  items: {
-    marginTop: 25,
-    marginHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-  },
-});
-
 const mapStateToProps = state => ({
-  deleteSaved: state.savedReducers,
-  switch: state.styleReducers.switch,
-  textColor: state.styleReducers.color,
-  backgroundColor: state.styleReducers.backgroundColor,
-  fontSize: state.styleReducers.fontSize,
+  saved: state.saved.data,
+  sw: state.style.switch,
+  textColor: state.style.color,
+  backgroundColor: state.style.backgroundColor,
+  fontSize: state.style.fontSize,
 });
 
-const mapDispatchToProps = dispatch => ({
-  deleteAll: () => dispatch(deleteAllSavedNews()),
-  changeToDay: () => dispatch(changeToDay()),
-  changeToNight: () => dispatch(changeToNight()),
-  changeFontSize: value => dispatch(changeFontSize(value)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Setting);
+export default connect(mapStateToProps)(Setting);

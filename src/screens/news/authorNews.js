@@ -1,53 +1,63 @@
 import React, {Component} from 'react';
-import {ScrollView, View} from 'react-native';
+import {FlatList, View} from 'react-native';
 import Header from '../../components/Header';
 import {connect} from 'react-redux';
-import {NEWS_DETAILS, NEWS_LIST} from '../../res/constants';
+import {AUTHOR_DETAILS, NEWS_LIST} from '../../res/constants';
 import News from '../../components/News';
+import {Container} from 'native-base';
 
 class AuthorNews extends Component {
   render() {
-    const {item} = this.props.navigation.state.params;
+    const {backgroundColor, textColor, navigation, data, font} = this.props;
+    const item = navigation.getParam('item');
     return (
-      <View style={{flex: 1, backgroundColor: this.props.backgroundColor}}>
+      <View style={{flex: 1, backgroundColor: backgroundColor}}>
         <Header
           icon={'md-arrow-back'}
-          onPress={() => this.props.navigation.navigate(NEWS_LIST)}
+          onPress={() => navigation.navigate(NEWS_LIST)}
           title={item.source.name}
-          color={this.props.textColor}
+          color={textColor}
           details={true}
         />
-        <ScrollView>
-          {this.props.data.map((el, index) => {
-            if (el.source.name === item.source.name) {
-              return (
-                <News
-                  color={this.props.textColor}
-                  backgroundColor={this.props.backgroundColor}
-                  font={this.props.font}
-                  item={el}
-                  key={index}
-                  toDetails={() =>
-                    this.props.navigation.navigate(NEWS_DETAILS, {
-                      show: item,
-                      details: false,
-                    })
-                  }
-                />
-              );
+        <Container style={{backgroundColor: backgroundColor}}>
+          <FlatList
+            data={data}
+            renderItem={el => {
+              if (el.item.source.name === item.source.name) {
+                return (
+                  <News
+                    item={el.item}
+                    font={font}
+                    color={textColor}
+                    backgroundColor={backgroundColor}
+                    toDetails={() =>
+                      navigation.navigate(AUTHOR_DETAILS, {
+                        show: item,
+                        details: true,
+                      })
+                    }
+                  />
+                );
+              }
+            }}
+            keyExtractor={el =>
+              (
+                Date.parse(el.publishedAt) + Math.floor(Math.random() * 100)
+              ).toString()
             }
-          })}
-        </ScrollView>
+          />
+        </Container>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  data: state.newsReducers.data,
-  textColor: state.styleReducers.color,
-  backgroundColor: state.styleReducers.backgroundColor,
-  font: state.styleReducers.fontSize,
+  data: state.news.data,
+  textColor: state.style.color,
+  backgroundColor: state.style.backgroundColor,
+  font: state.style.fontSize,
+  change: state.read.data,
 });
 
 export default connect(mapStateToProps)(AuthorNews);

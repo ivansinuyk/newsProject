@@ -1,46 +1,30 @@
+const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'June',
+  'July',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 export function date(string) {
   const parsedate = Date.parse(string);
   const time = new Date(parsedate);
-  const now = new Date().getDate();
-  const month = monthToString(time.getMonth() + 1);
+  const now = new Date();
+  const month = months[time.getMonth()];
   const day = time.getDate();
   const monthAndDay = day.toString() + ' ' + month + ' at';
   return `${
-    now === time.getDate()
+    now.getDate() === time.getDate() && now.getMonth() === time.getMonth()
       ? 'today at'
-      : now - 1 === time.getDate()
+      : now - 1 === time.getDate() && now.getMonth() === time.getMonth()
       ? 'yesterday at'
       : monthAndDay
   } ${time.getHours()}:${time.getMinutes()}`;
-}
-
-function monthToString(month) {
-  switch (month) {
-    case 1:
-      return 'Jan';
-    case 2:
-      return 'Feb';
-    case 3:
-      return 'Mar';
-    case 4:
-      return 'Apr';
-    case 5:
-      return 'May';
-    case 6:
-      return 'June';
-    case 7:
-      return 'July';
-    case 8:
-      return 'Aug';
-    case 9:
-      return 'Sep';
-    case 10:
-      return 'Oct';
-    case 11:
-      return 'Nov';
-    case 12:
-      return 'Dec';
-    default:
-      return 'Unknown';
-  }
 }

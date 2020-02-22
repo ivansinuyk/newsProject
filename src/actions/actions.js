@@ -3,17 +3,21 @@ import {
   SAVED_NEWS,
   LOADING,
   ERROR,
-  READED_NEWS,
+  READ_NEWS,
   DELETE_ALL,
-  REFRESH_READED,
+  REFRESH_READ,
   CHANGE_TO_NIGHT,
   CHANGE_TO_DAY,
   CHANGE_FONT_SIZE,
+  CLEAR_NEWS,
+  READ_ITEM,
 } from './actionTypes';
 import {API} from '../res/constants';
 
 export const getData = category => async (dispatch, getState) => {
-  getState().newsReducers.data = [];
+  dispatch({
+    type: CLEAR_NEWS,
+  });
   dispatch({
     type: LOADING,
   });
@@ -22,16 +26,16 @@ export const getData = category => async (dispatch, getState) => {
       `https://newsapi.org/v2/top-headlines?country=us${category}&pageSize=50&apiKey=${API}`,
     );
     const result = await api_url.json();
-    const readed = getState().readedReducers.filter(
+    const read = getState().read.data.filter(
       item => item.date + 280000000 > Date.now(),
     );
     dispatch({
-      type: REFRESH_READED,
-      payload: readed,
+      type: REFRESH_READ,
+      payload: read,
     });
-    readed.map(el =>
+    read.map(el =>
       result.articles.map(item =>
-        el.data === item.publishedAt ? (item.isReaded = true) : {},
+        el.data === item.publishedAt ? (item.isRead = true) : {},
       ),
     );
     dispatch({
@@ -46,7 +50,8 @@ export const getData = category => async (dispatch, getState) => {
   }
 };
 
-export const savedItem = item => ({
+export const toggleSavedItem = item => ({
+  // Добавляем\удаляем сохраненную новость в одно нажатие
   type: SAVED_NEWS,
   payload: item,
 });
@@ -55,13 +60,20 @@ export const deleteAllSavedNews = () => ({
   type: DELETE_ALL,
 });
 
-export const readedItem = item => (dispatch, getState) => {
-  getState().newsReducers.data.map(el =>
-    el.publishedAt === item ? (el.isReaded = true) : {},
-  );
+export const readItem = item => (dispatch, getState) => {
+  const newsData = getState().news.data;
+  newsData.map(el => (el.publishedAt === item ? (el.isRead = true) : {}));
+  //Если даты совпадают мы меняем значение isRead на true
   dispatch({
-    type: READED_NEWS,
-    payload: item,
+    type: READ_ITEM,
+    payload: newsData,
+  });
+  const data = {
+    data: [...getState().read.data, {date: Date.now(), data: item}],
+  };
+  dispatch({
+    type: READ_NEWS,
+    payload: data,
   });
 };
 

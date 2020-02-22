@@ -1,76 +1,55 @@
 import React, {Component} from 'react';
-import {Container, Content} from 'native-base';
-import TextStyle from '../../components/TextStyle';
+import {Container} from 'native-base';
 import Header from '../../components/Header';
+import {AUTHOR_NEWS} from '../../res/constants';
 import {connect} from 'react-redux';
-import News from '../../components/News';
-import {NEWS_DETAILS, h} from '../../res/constants';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import {toggleSavedItem} from '../../actions/actions';
+import Details from '../../components/Details';
 
-class Saved extends Component {
+class savedDetails extends Component {
   render() {
+    const {
+      backgroundColor,
+      font,
+      navigation,
+      dispatch,
+      textColor,
+      data,
+    } = this.props;
+    const show = this.props.navigation.getParam('show');
+    let iconColor = textColor;
+    data.find(
+      item => item.publishedAt === show.publishedAt && (iconColor = 'red'),
+    );
     return (
-      <Container style={{flex: 1, backgroundColor: this.props.backgroundColor}}>
+      <Container style={{flex: 1, backgroundColor: backgroundColor}}>
         <Header
-          onPress={this.props.navigation.toggleDrawer}
-          title={'Saved news'}
+          icon={'md-arrow-back'}
           details={true}
-          color={this.props.textColor}
+          color={textColor}
+          onPress={navigation.goBack}
+          title={show.source.name}
         />
-        {!this.props.data[0] ? (
-          <Container
-            style={{
-              marginHorizontal: 15,
-              height: h / 1.5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: this.props.backgroundColor,
-            }}>
-            <TextStyle>You don`t have any saved news</TextStyle>
-            <TextStyle>
-              For saving news, please, choose whatever you want and click on
-              this icon{' '}
-              <Icon
-                size={18}
-                name={'favorite-border'}
-                color={this.props.textColor === 'black' ? 'black' : 'white'}
-              />
-              . After that it turns to{' '}
-              <Icon size={18} name={'favorite'} color={'red'} />. If you want to
-              remove news from saved, you just need to click again on this icon.
-            </TextStyle>
-          </Container>
-        ) : (
-          <Content padder>
-            {this.props.data.map((item, index) => {
-              return (
-                <News
-                  item={item}
-                  key={index}
-                  color={this.props.textColor}
-                  backgroundColor={this.props.backgroundColor}
-                  font={this.props.font}
-                  toDetails={() =>
-                    this.props.navigation.navigate(NEWS_DETAILS, {
-                      show: item,
-                      details: true,
-                    })
-                  }
-                />
-              );
-            })}
-          </Content>
-        )}
+        <Details
+          backgroundColor={backgroundColor}
+          item={show}
+          font={font}
+          iconColor={iconColor}
+          navigate={() => navigation.navigate(AUTHOR_NEWS, {item: show})}
+          saveItem={() => dispatch(toggleSavedItem(show))}
+          details={false}
+        />
       </Container>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  data: state.savedReducers,
-  backgroundColor: state.styleReducers.backgroundColor,
-  textColor: state.styleReducers.color,
-  font: state.styleReducers.fontSize,
+  data: state.saved.data,
+  textColor: state.style.color,
+  backgroundColor: state.style.backgroundColor,
+  font: state.style.fontSize,
+  read: state.read.data,
 });
 
-export default connect(mapStateToProps)(Saved);
+export default connect(mapStateToProps)(savedDetails);

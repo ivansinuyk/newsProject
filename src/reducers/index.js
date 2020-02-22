@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
-import newsReducers from './newsReducers';
-import savedReducers from './savedReducers';
-import readedReducers from './readedReducers';
-import styleReducers from './styleReducers';
+import news from './news';
+import saved from './saved';
+import read from './read';
+import style from './style';
 
 export default combineReducers({
-  newsReducers,
-  savedReducers,
-  readedReducers,
-  styleReducers,
+  news,
+  saved,
+  read,
+  style,
 });

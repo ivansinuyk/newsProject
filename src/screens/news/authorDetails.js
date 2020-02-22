@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {readItem, toggleSavedItem} from '../../actions/actions';
 import Details from '../../components/Details';
 
-class newsDetails extends Component {
+class authorDetails extends Component {
   componentDidMount() {
     this.props.dispatch(
       readItem(this.props.navigation.getParam('show').publishedAt),
@@ -28,7 +28,7 @@ class newsDetails extends Component {
       item => item.publishedAt === show.publishedAt && (iconColor = 'red'),
     );
     return (
-      <Container style={{flex: 1, backgroundColor: backgroundColor}}>
+      <Container style={{flex: 1, backgroundColor: this.props.backgroundColor}}>
         <Header
           icon={'md-arrow-back'}
           details={details}
@@ -42,9 +42,7 @@ class newsDetails extends Component {
           item={show}
           font={font}
           iconColor={iconColor}
-          navigate={() => navigation.navigate(AUTHOR_NEWS, {item: show})}
           saveItem={() => dispatch(toggleSavedItem(show))}
-          details={details}
         />
       </Container>
     );
@@ -59,4 +57,4 @@ const mapStateToProps = state => ({
   read: state.read.data,
 });
 
-export default connect(mapStateToProps)(newsDetails);
+export default connect(mapStateToProps)(authorDetails);

@@ -11,7 +11,7 @@ const initialState = {
   fontSize: 12,
 };
 
-const styleReducers = (state = initialState, action) => {
+const style = (state = initialState, action) => {
   switch (action.type) {
     case CHANGE_TO_DAY:
       return {
@@ -29,4 +29,4 @@ const styleReducers = (state = initialState, action) => {
   }
 };
 
-export default styleReducers;
+export default style;

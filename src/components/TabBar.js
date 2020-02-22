@@ -13,8 +13,8 @@ const TabBarComponent = props => {
 };
 
 const mapStateToProps = state => ({
-  backgroundColor: state.styleReducers.backgroundColor,
-  color: state.styleReducers.color,
+  backgroundColor: state.style.backgroundColor,
+  color: state.style.color,
 });
 
 export default connect(mapStateToProps)(TabBarComponent);

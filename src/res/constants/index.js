@@ -12,3 +12,4 @@ export const SETTINGS = 'SETTINGS';
 export const AUTHOR_NEWS = 'AUTHOR_NEWS';
 export const SAVED_NEWS = 'SAVED_NEWS';
 export const SAVED_DETAILS = 'SAVED_DETAILS';
+export const AUTHOR_DETAILS = 'AUTHOR_DETAILS';
