@@ -23,7 +23,10 @@ class Setting extends Component {
       sw,
       fontSize,
       saved,
-      dispatch,
+      changeToDay,
+      changeToNight,
+      changeFontSize,
+      deleteAllSavedNews,
     } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: backgroundColor}}>
@@ -31,27 +34,31 @@ class Setting extends Component {
         <View>
           <ThemeSettings
             sw={sw}
-            toNight={() => dispatch(changeToNight())}
-            toDay={() => dispatch(changeToDay())}
+            toNight={() => changeToNight()}
+            toDay={() => changeToDay()}
           />
           <FontSettings
             textColor={textColor}
             fontSize={fontSize}
             onValueChange={val => this.setState({font: val})}
-            onSlidingComplete={value => dispatch(changeFontSize(value))}
+            onSlidingComplete={value => changeFontSize(value)}
             font={this.state.font}
           />
-          <DeleteSettings
-            onPress={() => dispatch(deleteAllSavedNews())}
-            saved={saved}
-          />
+          <DeleteSettings onPress={() => deleteAllSavedNews()} saved={saved} />
         </View>
       </View>
     );
   }
 }
 
-const mapStateToProps = state => ({
+const actionCreators = {
+  deleteAllSavedNews,
+  changeFontSize,
+  changeToDay,
+  changeToNight,
+};
+
+const mapState = state => ({
   saved: state.saved.data,
   sw: state.style.switch,
   textColor: state.style.color,
@@ -59,4 +66,7 @@ const mapStateToProps = state => ({
   fontSize: state.style.fontSize,
 });
 
-export default connect(mapStateToProps)(Setting);
+export default connect(
+  mapState,
+  actionCreators,
+)(Setting);

@@ -21,30 +21,22 @@ class AuthorNews extends Component {
         />
         <Container style={{backgroundColor: backgroundColor}}>
           <FlatList
-            data={data}
-            renderItem={el => {
-              if (el.item.source.name === item.source.name) {
-                return (
-                  <News
-                    item={el.item}
-                    font={font}
-                    color={textColor}
-                    backgroundColor={backgroundColor}
-                    toDetails={() =>
-                      navigation.navigate(AUTHOR_DETAILS, {
-                        show: item,
-                        details: true,
-                      })
-                    }
-                  />
-                );
-              }
-            }}
-            keyExtractor={el =>
-              (
-                Date.parse(el.publishedAt) + Math.floor(Math.random() * 100)
-              ).toString()
-            }
+            data={data.filter(el => el.source.name === item.source.name)}
+            renderItem={el => (
+              <News
+                item={el.item}
+                font={font}
+                color={textColor}
+                backgroundColor={backgroundColor}
+                toDetails={() =>
+                  navigation.navigate(AUTHOR_DETAILS, {
+                    show: el.item,
+                    details: true,
+                  })
+                }
+              />
+            )}
+            keyExtractor={el => Date.parse(el.publishedAt).toString()}
           />
         </Container>
       </View>
@@ -52,7 +44,7 @@ class AuthorNews extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapState = state => ({
   data: state.news.data,
   textColor: state.style.color,
   backgroundColor: state.style.backgroundColor,
@@ -60,4 +52,4 @@ const mapStateToProps = state => ({
   change: state.read.data,
 });
 
-export default connect(mapStateToProps)(AuthorNews);
+export default connect(mapState)(AuthorNews);

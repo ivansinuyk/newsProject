@@ -15,7 +15,7 @@ const initialState = {
 const news = (state = initialState, action) => {
   switch (action.type) {
     case GET_NEWS:
-      return {data: action.payload, loading: false, error: false};
+      return {...state, data: action.payload, loading: false, error: false};
     case LOADING:
       return {...state, loading: true, error: false};
     case ERROR:
@@ -23,7 +23,13 @@ const news = (state = initialState, action) => {
     case CLEAR_NEWS:
       return {...state, data: []};
     case READ_ITEM:
-      return {...state, data: action.payload};
+      return {
+        ...state,
+        data: state.data.map(el => ({
+          ...el,
+          isRead: el.publishedAt === action.payload,
+        })),
+      };
     default:
       return state;
   }

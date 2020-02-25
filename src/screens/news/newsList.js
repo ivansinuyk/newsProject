@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Container} from 'native-base';
 import {ActivityIndicator, RefreshControl, FlatList} from 'react-native';
 import {connect} from 'react-redux';
-import {getData} from '../../actions/actions';
+import {getData, setValue} from '../../actions/actions';
 import {h, NEWS_DETAILS} from '../../res/constants';
 import Header from '../../components/Header';
 import News from '../../components/News';
@@ -13,11 +13,13 @@ class newsList extends Component {
   state = {
     category: '',
   };
-  UNSAFE_componentWillMount() {
-    this.props.dispatch(getData(this.state.category));
-    // state.category меняется в зависимости от выбраной категории в Picker компоненте и отправляется запрос в newsAPI с другим ключом
-    // например getData('') - изначально все новости и getData('&category=sports') - категория спорт
+
+  componentDidMount() {
+    this.props.getData(this.state.category);
+    // state.category changed when you pick some category in Picker component and sended in NEWSAPI query with another key
+    // for example: getData('') - always at start app and parse all news and getData('&category=sports') when you pick category sport
   }
+
   render() {
     const {
       backgroundColor,
@@ -27,7 +29,7 @@ class newsList extends Component {
       font,
       navigation,
       loading,
-      dispatch,
+      getData,
     } = this.props;
     return (
       <Container style={{backgroundColor: backgroundColor, flex: 1}}>
@@ -43,7 +45,7 @@ class newsList extends Component {
           <Error
             backgroundColor={backgroundColor}
             error={error}
-            onPress={() => dispatch(getData(this.state.category))}
+            onPress={() => getData(this.state.category)}
           />
         )}
         {data[0] && (
@@ -53,7 +55,7 @@ class newsList extends Component {
               selectedValue={this.state.category}
               textColor={textColor}
               onValueChange={category => {
-                dispatch(getData(category));
+                getData(category);
                 this.setState({category: category});
               }}
             />
@@ -61,7 +63,7 @@ class newsList extends Component {
               refreshControl={
                 <RefreshControl
                   refreshing={false}
-                  onRefresh={() => dispatch(getData(this.state.category))}
+                  onRefresh={() => getData(this.state.category)}
                 />
               }
               data={data}
@@ -79,11 +81,7 @@ class newsList extends Component {
                   }
                 />
               )}
-              keyExtractor={item =>
-                (
-                  Date.parse(item.publishedAt) + Math.floor(Math.random() * 100)
-                ).toString()
-              }
+              keyExtractor={el => Date.parse(el.publishedAt).toString()}
             />
           </Container>
         )}
@@ -92,7 +90,12 @@ class newsList extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const actionCreators = {
+  getData,
+};
+
+const mapState = state => ({
+  text: state.news.text,
   data: state.news.data,
   loading: state.news.loading,
   error: state.news.error,
@@ -102,4 +105,7 @@ const mapStateToProps = state => ({
   font: state.style.fontSize,
 });
 
-export default connect(mapStateToProps)(newsList);
+export default connect(
+  mapState,
+  actionCreators,
+)(newsList);

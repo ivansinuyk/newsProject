@@ -8,27 +8,24 @@ import Details from '../../components/Details';
 
 class authorDetails extends Component {
   componentDidMount() {
-    this.props.dispatch(
-      readItem(this.props.navigation.getParam('show').publishedAt),
-    );
+    this.props.readItem(this.props.navigation.getParam('show').publishedAt);
   }
   render() {
     const {
       backgroundColor,
       font,
       navigation,
-      dispatch,
+      toggleSavedItem,
       textColor,
       data,
     } = this.props;
     const show = this.props.navigation.getParam('show');
     const details = this.props.navigation.getParam('details');
-    let iconColor = textColor;
-    data.find(
-      item => item.publishedAt === show.publishedAt && (iconColor = 'red'),
+    const iconColor = data.map(item =>
+      item.publishedAt === show.publishedAt ? 'red' : textColor,
     );
     return (
-      <Container style={{flex: 1, backgroundColor: this.props.backgroundColor}}>
+      <Container style={{flex: 1, backgroundColor: backgroundColor}}>
         <Header
           icon={'md-arrow-back'}
           details={details}
@@ -41,15 +38,20 @@ class authorDetails extends Component {
           backgroundColor={backgroundColor}
           item={show}
           font={font}
-          iconColor={iconColor}
-          saveItem={() => dispatch(toggleSavedItem(show))}
+          iconColor={iconColor[0]}
+          saveItem={() => toggleSavedItem(show)}
         />
       </Container>
     );
   }
 }
 
-const mapStateToProps = state => ({
+const actionCreators = {
+  readItem,
+  toggleSavedItem,
+};
+
+const mapState = state => ({
   data: state.saved.data,
   textColor: state.style.color,
   backgroundColor: state.style.backgroundColor,
@@ -57,4 +59,7 @@ const mapStateToProps = state => ({
   read: state.read.data,
 });
 
-export default connect(mapStateToProps)(authorDetails);
+export default connect(
+  mapState,
+  actionCreators,
+)(authorDetails);

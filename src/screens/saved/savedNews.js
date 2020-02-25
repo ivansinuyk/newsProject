@@ -13,6 +13,7 @@ class Saved extends Component {
       <Container style={{flex: 1, backgroundColor: backgroundColor}}>
         <Header title={'Saved news'} details={true} color={textColor} />
         {!data[0] ? (
+          // if there no saved news then will show NoSavad (help) component
           <NoSaved backgroundColor={backgroundColor} textColor={textColor} />
         ) : (
           <Content padder>
@@ -40,11 +41,11 @@ class Saved extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapState = state => ({
   data: state.saved.data,
   backgroundColor: state.style.backgroundColor,
   textColor: state.style.color,
   font: state.style.fontSize,
 });
 
-export default connect(mapStateToProps)(Saved);
+export default connect(mapState)(Saved);

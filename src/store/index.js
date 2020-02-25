@@ -7,7 +7,8 @@ import ReduxThunk from 'redux-thunk';
 const rootPersistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: 'newsReducers',
+  blacklist: 'news',
+  // Do not persist current news from getData
 };
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

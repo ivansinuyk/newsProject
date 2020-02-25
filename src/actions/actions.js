@@ -26,21 +26,26 @@ export const getData = category => async (dispatch, getState) => {
       `https://newsapi.org/v2/top-headlines?country=us${category}&pageSize=50&apiKey=${API}`,
     );
     const result = await api_url.json();
+
     const read = getState().read.data.filter(
       item => item.date + 280000000 > Date.now(),
     );
+    // Filtring all read news older than 3 days
+
     dispatch({
       type: REFRESH_READ,
       payload: read,
     });
-    read.map(el =>
-      result.articles.map(item =>
-        el.data === item.publishedAt ? (item.isRead = true) : {},
-      ),
-    );
+
+    const newArticles = result.articles.map(article => ({
+      ...article,
+      isRead: read.some(i => i.data === article.publishedAt),
+      // Replacing receive data with already read persisted news
+    }));
+
     dispatch({
       type: GET_NEWS,
-      payload: result.articles,
+      payload: newArticles,
     });
   } catch (error) {
     dispatch({
@@ -51,7 +56,7 @@ export const getData = category => async (dispatch, getState) => {
 };
 
 export const toggleSavedItem = item => ({
-  // Добавляем\удаляем сохраненную новость в одно нажатие
+  // Add/delete news to saved in one toggling
   type: SAVED_NEWS,
   payload: item,
 });
@@ -61,12 +66,9 @@ export const deleteAllSavedNews = () => ({
 });
 
 export const readItem = item => (dispatch, getState) => {
-  const newsData = getState().news.data;
-  newsData.map(el => (el.publishedAt === item ? (el.isRead = true) : {}));
-  //Если даты совпадают мы меняем значение isRead на true
   dispatch({
     type: READ_ITEM,
-    payload: newsData,
+    payload: item,
   });
   const data = {
     data: [...getState().read.data, {date: Date.now(), data: item}],

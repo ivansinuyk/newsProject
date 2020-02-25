@@ -12,14 +12,13 @@ class savedDetails extends Component {
       backgroundColor,
       font,
       navigation,
-      dispatch,
+      toggleSavedItem,
       textColor,
       data,
     } = this.props;
     const show = this.props.navigation.getParam('show');
-    let iconColor = textColor;
-    data.find(
-      item => item.publishedAt === show.publishedAt && (iconColor = 'red'),
+    const iconColor = data.map(item =>
+      item.publishedAt === show.publishedAt ? 'red' : textColor,
     );
     return (
       <Container style={{flex: 1, backgroundColor: backgroundColor}}>
@@ -34,9 +33,9 @@ class savedDetails extends Component {
           backgroundColor={backgroundColor}
           item={show}
           font={font}
-          iconColor={iconColor}
+          iconColor={iconColor[0]}
           navigate={() => navigation.navigate(AUTHOR_NEWS, {item: show})}
-          saveItem={() => dispatch(toggleSavedItem(show))}
+          saveItem={() => toggleSavedItem(show)}
           details={false}
         />
       </Container>
@@ -44,7 +43,11 @@ class savedDetails extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const actionCreators = {
+  toggleSavedItem,
+};
+
+const mapState = state => ({
   data: state.saved.data,
   textColor: state.style.color,
   backgroundColor: state.style.backgroundColor,
@@ -52,4 +55,7 @@ const mapStateToProps = state => ({
   read: state.read.data,
 });
 
-export default connect(mapStateToProps)(savedDetails);
+export default connect(
+  mapState,
+  actionCreators,
+)(savedDetails);
